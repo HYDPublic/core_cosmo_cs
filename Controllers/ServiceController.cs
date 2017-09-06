@@ -4,6 +4,7 @@ using core_cosmo_cs.Models;
 using System.Net.Http;
 using System.IO;
 using System.Net.Http.Headers;
+using System.Threading.Tasks;
 
 namespace core_cosmo_cs.Controllers
 {
@@ -17,12 +18,13 @@ namespace core_cosmo_cs.Controllers
         [HttpPost, ActionName("Submit")]
         public IActionResult Submit(FormViewModel model) 
         {
-            MakeRequest(model.filePath);
-
-            return Redirect("/");
+            var json = MakeRequest(model.filePath);
+            ResultViewModel results = new ResultViewModel();
+            results.jsonResult = json.Result;
+            return View("Results", results);
         }
 
-        static async void MakeRequest(string filePath) {
+        static async Task<string> MakeRequest(string filePath) {
             var client = new HttpClient();
 
             client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", "560d169268e3471685c09dbadf41422e");
@@ -45,6 +47,7 @@ namespace core_cosmo_cs.Controllers
 
             //A peak at the JSON response.
             Console.WriteLine(responseContent);
+            return responseContent;
         }
 
         static byte[] GetImageAsByteArray(string filePath) {
