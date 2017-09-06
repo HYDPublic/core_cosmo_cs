@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace core_cosmo_cs.Models
@@ -7,5 +8,9 @@ namespace core_cosmo_cs.Models
     {
         [Required]
         public string jsonResult { get; set; }
+
+        public string filePath { get; set; }
+
+        public Dictionary<string, string> emotionPercentages { get; set; }
     }
 }

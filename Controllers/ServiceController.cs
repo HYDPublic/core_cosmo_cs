@@ -20,7 +20,11 @@ namespace core_cosmo_cs.Controllers
         {
             var json = MakeRequest(model.filePath);
             ResultViewModel results = new ResultViewModel();
+
+            // Raw JSON, parse into more readable result
             results.jsonResult = json.Result;
+            results.filePath = model.filePath;
+
             return View("Results", results);
         }
 
@@ -46,7 +50,7 @@ namespace core_cosmo_cs.Controllers
             }
 
             //A peak at the JSON response.
-            Console.WriteLine(responseContent);
+            // Console.WriteLine(responseContent);
             return responseContent;
         }
 

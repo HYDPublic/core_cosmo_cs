@@ -30,6 +30,12 @@ form {
     max-width: 400px;
 }
 
+.result-image {
+    max-width: 500px;
+    border: 1px solid black;
+    margin-bottom: 15px;
+}
+
 /* Hide/rearrange for smaller screens */
 @media screen and (max-width: 767px) {
     /* Hide captions */
