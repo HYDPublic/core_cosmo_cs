@@ -8,5 +8,14 @@
 <hr>
 
 <img src="@Model.filePath" alt="The given image" class="result-image" />
-
+<span>@Model.filePath</span>
+<hr>
+<h3>Raw Json</h3>
 <p>@Model.jsonResult</p>
+<hr>
+<h3>Parsed Json</h3>
+<ul>
+@foreach (var score in @Model.scores) {
+    <li>@score</li>
+}
+</ul>
