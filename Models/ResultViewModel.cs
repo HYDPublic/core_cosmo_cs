@@ -11,6 +11,6 @@ namespace core_cosmo_cs.Models
 
         public string filePath { get; set; }
 
-        public Dictionary<string, string> emotionPercentages { get; set; }
+        public List<string> scores { get; set; }
     }
 }

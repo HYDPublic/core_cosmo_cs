@@ -5,6 +5,8 @@ using System.Net.Http;
 using System.IO;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using Newtonsoft.Json.Linq;
+using System.Collections.Generic;
 
 namespace core_cosmo_cs.Controllers
 {
@@ -24,6 +26,17 @@ namespace core_cosmo_cs.Controllers
             // Raw JSON, parse into more readable result
             results.jsonResult = json.Result;
             results.filePath = model.filePath;
+            results.scores = new List<string>();
+
+            var obj = JArray.Parse(results.jsonResult);
+
+            var props = obj.First.Last.First;
+
+            foreach (var property in props)
+            {
+                var x = property.ToString();
+                results.scores.Add(x);
+            }
 
             return View("Results", results);
         }
