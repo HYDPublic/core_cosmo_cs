@@ -7,13 +7,19 @@ using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
+using core_cosmo_cs.Data;
 
 namespace core_cosmo_cs.Controllers
 {
     public class ServiceController : Controller
     {
+        MyDbContext _context;
+        public ServiceController(MyDbContext context) {
+            _context = context;
+        }
         public IActionResult Index()
         {
+            var test = _context.Results;
             return View();
         }
 
@@ -37,6 +43,10 @@ namespace core_cosmo_cs.Controllers
                 Scores score = new Scores();
                 score.Score = property.ToString();
                 results.scores.Add(score);
+            }
+
+            if(_context == null) {
+                results.scores.Clear();
             }
 
             return View("Results", results);
