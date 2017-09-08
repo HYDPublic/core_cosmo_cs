@@ -45,10 +45,8 @@ namespace core_cosmo_cs.Controllers
                 results.scores.Add(score);
             }
 
-            if(_context == null) {
-                results.scores.Clear();
-            }
-
+            _context.Add(results);
+            _context.SaveChanges();
             return View("Results", results);
         }
 
