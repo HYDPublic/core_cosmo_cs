@@ -8,7 +8,5 @@ namespace core_cosmo_cs.Models
     {
         [Required, FromForm]
         public string filePath { get; set; }
-
-        public bool ShowFilePath => !string.IsNullOrEmpty(filePath);
     }
 }
