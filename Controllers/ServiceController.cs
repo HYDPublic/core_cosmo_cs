@@ -19,7 +19,7 @@ namespace core_cosmo_cs.Controllers
         }
         public IActionResult Index()
         {
-            var test = _context.Results;
+            ViewData["results"] = _context.Results.Find(1);
             return View();
         }
 

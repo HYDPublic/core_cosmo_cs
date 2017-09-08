@@ -17,6 +17,21 @@
     </div>
 </form>
 
+<hr>
+
+<h2>Recent Requests</h2>
+<p style="color:red">
+
+@{
+    if(ViewData["results"] != null)
+    {
+        @ViewData["results"]
+
+    } else {
+        <p>nothing</p>
+    }
+}   
+</p>
 <!-- <form method="post" enctype="multipart/form-data" asp-controller="Service" asp-action="Submit">
     <div class="form-group">
         <div class="col-md-10">
