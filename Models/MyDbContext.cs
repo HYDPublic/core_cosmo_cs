@@ -9,6 +9,6 @@ namespace core_cosmo_cs.Data
         {
         }
 
-        public DbSet<ResultViewModel> results { get; set; }
+        public DbSet<ResultViewModel> Results { get; set; }
     }
 }
