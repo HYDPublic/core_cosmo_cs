@@ -32,7 +32,7 @@ namespace core_cosmo_cs.Controllers
             // Raw JSON, parse into more readable result
             results.jsonResult = json.Result;
             results.filePath = model.filePath;
-            results.scores = new List<Scores>();
+            results.scores = new List<Result>();
 
             var obj = JArray.Parse(results.jsonResult);
 
@@ -40,9 +40,9 @@ namespace core_cosmo_cs.Controllers
 
             foreach (var property in props)
             {
-                Scores score = new Scores();
-                score.Score = property.ToString();
-                results.scores.Add(score);
+                Result result = new Result();
+                result.Score = property.ToString();
+                results.scores.Add(result);
             }
 
             _context.Add(results);

@@ -13,6 +13,6 @@ namespace core_cosmo_cs.Models
 
         public string filePath { get; set; }
 
-        public List<Scores> scores { get; set; }
+        public List<Result> scores { get; set; }
     }
 }
