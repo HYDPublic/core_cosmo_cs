@@ -9,21 +9,23 @@ using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using core_cosmo_cs.Data;
 using Microsoft.Azure.Documents.Client;
+using Microsoft.Azure.Documents;
+using System.Net;
 
 namespace core_cosmo_cs.Controllers
 {
     public class ServiceController : Controller
     {   
         DocumentClient _client;
-        MyDbContext _context;
+        // MyDbContext _context;
         public ServiceController(DocumentClient client) {
             // _context = context;
             _client = client;
         }
         public IActionResult Index()
         {
-            var lastRequest = _context.Results.Find(1);
-            ViewData["results"] = lastRequest.jsonResult;
+            // var lastRequest = _context.Results.Find(1);
+            // ViewData["results"] = lastRequest.jsonResult;
             return View();
         }
 
@@ -35,12 +37,35 @@ namespace core_cosmo_cs.Controllers
             ResultViewModel results = ProcessResults(json, model);
 
             if (results != null) {
-                _context.Add(results);
-                _context.SaveChanges();
+                // is async... need to remedy
+                // await CreateResultsDocumentIfNotExists("Results", "ResultsCollection", results);
+                // _context.Add(results);
+                // _context.SaveChanges();
                 return View("Results", results);
             } else {
                 ViewData["error"] = "Error in request";
                 return View("Index");
+            }
+        }
+
+        private async Task CreateResultsDocumentIfNotExists(string databaseName, string collectionName, ResultViewModel results)
+        {
+            try
+            {
+                await _client.ReadDocumentAsync(UriFactory.CreateDocumentUri(databaseName, collectionName, results.Id.ToString()));
+                Console.WriteLine("Found {0}", results.Id);
+            }
+            catch (DocumentClientException de)
+            {
+                if (de.StatusCode == HttpStatusCode.NotFound)
+                {
+                    await _client.CreateDocumentAsync(UriFactory.CreateDocumentCollectionUri(databaseName, collectionName), results);
+                    Console.WriteLine("Created Family {0}", results.Id);
+                }
+                else
+                {
+                    throw;
+                }
             }
         }
 

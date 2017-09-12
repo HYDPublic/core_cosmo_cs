@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using core_cosmo_cs.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -22,6 +23,8 @@ namespace core_cosmo_cs
             Configuration = configuration;
             client = new DocumentClient(new Uri(EndpointUri), PrimaryKey);
 
+            this.client.CreateDatabaseIfNotExistsAsync(new Database { Id = "Results" });
+            this.client.CreateDocumentCollectionIfNotExistsAsync(UriFactory.CreateDatabaseUri("Results"), new DocumentCollection { Id = "ResultsCollection" });
         }
 
         public IConfiguration Configuration { get; }
