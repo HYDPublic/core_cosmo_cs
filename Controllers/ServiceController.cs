@@ -19,7 +19,8 @@ namespace core_cosmo_cs.Controllers
         }
         public IActionResult Index()
         {
-            ViewData["results"] = _context.Results.Find(1);
+            var lastRequest = _context.Results.Find(1);
+            ViewData["results"] = lastRequest.jsonResult;
             return View();
         }
 
@@ -32,7 +33,7 @@ namespace core_cosmo_cs.Controllers
             // Raw JSON, parse into more readable result
             results.jsonResult = json.Result;
             results.filePath = model.filePath;
-            results.scores = new List<Result>();
+            results.results = new List<Result>();
 
             var obj = JArray.Parse(results.jsonResult);
 
@@ -42,7 +43,7 @@ namespace core_cosmo_cs.Controllers
             {
                 Result result = new Result();
                 result.Score = property.ToString();
-                results.scores.Add(result);
+                results.results.Add(result);
             }
 
             _context.Add(results);
