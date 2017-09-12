@@ -26,6 +26,7 @@ namespace core_cosmo_cs
             services.AddMvc();
 
             services.AddDbContext<MyDbContext>(options =>
+                
                 options.UseSqlite("Data Source=Results.db"));
                 // options.UseSqlServer(Configuration.GetConnectionString("MyDbContext")));
         }
