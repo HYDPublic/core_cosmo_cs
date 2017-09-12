@@ -9,11 +9,11 @@ namespace core_cosmo_cs.Controllers
 {
     public class ResultsController : Controller
     {
-        MyDbContext _context;
-        public IActionResult Index(MyDbContext context)
-        {
-            _context = context;
-            return View(_context.Results);
-        }
+        // MyDbContext _context;
+        // public IActionResult Index(MyDbContext context)
+        // {
+        //     _context = context;
+        //     return View(_context.Results);
+        // }
     }
 }

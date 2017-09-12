@@ -28,9 +28,17 @@ namespace core_cosmo_cs.Controllers
         public IActionResult Submit(FormViewModel model) 
         {
             var json = MakeRequest(model.filePath);
+
+            ResultViewModel results = ProcessResults(json, model);
+
+            _context.Add(results);
+            _context.SaveChanges();
+            return View("Results", results);
+        }
+
+        private ResultViewModel ProcessResults(Task<string> json, FormViewModel model) {
             ResultViewModel results = new ResultViewModel();
 
-            // Raw JSON, parse into more readable result
             results.jsonResult = json.Result;
             results.filePath = model.filePath;
             results.results = new List<Result>();
@@ -46,12 +54,9 @@ namespace core_cosmo_cs.Controllers
                 results.results.Add(result);
             }
 
-            _context.Add(results);
-            _context.SaveChanges();
-            return View("Results", results);
+            return results;
         }
-
-        static async Task<string> MakeRequest(string filePath) {
+        private static async Task<string> MakeRequest(string filePath) {
             var client = new HttpClient();
 
             client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", "560d169268e3471685c09dbadf41422e");
@@ -65,15 +70,10 @@ namespace core_cosmo_cs.Controllers
 
             using (var content = new ByteArrayContent(data))
             {
-                // This example uses content type "application/octet-stream".
-                // The other content types you can use are "application/json" and "multipart/form-data".
                 content.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
                 response = await client.PostAsync(uri, content);
                 responseContent = response.Content.ReadAsStringAsync().Result;
             }
-
-            //A peak at the JSON response.
-            // Console.WriteLine(responseContent);
             return responseContent;
         }
 
