@@ -8,14 +8,17 @@ using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using core_cosmo_cs.Data;
+using Microsoft.Azure.Documents.Client;
 
 namespace core_cosmo_cs.Controllers
 {
     public class ServiceController : Controller
-    {
+    {   
+        DocumentClient _client;
         MyDbContext _context;
-        public ServiceController(MyDbContext context) {
-            _context = context;
+        public ServiceController(DocumentClient client) {
+            // _context = context;
+            _client = client;
         }
         public IActionResult Index()
         {

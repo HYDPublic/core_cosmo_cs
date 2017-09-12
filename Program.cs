@@ -18,9 +18,6 @@ namespace core_cosmo_cs
 {
     public class Program
     {
-        private const string EndpointUri = "https://core-cosmo-cs-sql.documents.azure.com:443/";
-        private const string PrimaryKey = "MktS98Vx9ge5G1s6nf7Sc3Ipkuifb88aKG18CNUvhmmy4AOWDhm8ocWmCkt6DXI8NnX3zvmG39ojzi6AfT6CVw==";
-        private DocumentClient client;
         public static void Main(string[] args)
         {
             BuildWebHost(args).Run();
@@ -30,10 +27,5 @@ namespace core_cosmo_cs
             WebHost.CreateDefaultBuilder(args)
                 .UseStartup<Startup>()
                 .Build();
-
-        private async Task GetStarted()
-        {
-            this.client = new DocumentClient(new Uri(EndpointUri), PrimaryKey);
-        }
     }
 }

@@ -13632,11 +13632,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\jaearle\\Documents\\Code\\core-cosmo-cs\\core-cosmo-cs.csproj",
+      "projectUniqueName": "c:\\Users\\jaearle\\Documents\\Code\\core-cosmo-cs\\core-cosmo-cs.csproj",
       "projectName": "core-cosmo-cs",
-      "projectPath": "C:\\Users\\jaearle\\Documents\\Code\\core-cosmo-cs\\core-cosmo-cs.csproj",
+      "projectPath": "c:\\Users\\jaearle\\Documents\\Code\\core-cosmo-cs\\core-cosmo-cs.csproj",
       "packagesPath": "C:\\Users\\jaearle\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\jaearle\\Documents\\Code\\core-cosmo-cs\\obj\\",
+      "outputPath": "c:\\Users\\jaearle\\Documents\\Code\\core-cosmo-cs\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"

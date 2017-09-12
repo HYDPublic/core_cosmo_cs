@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using core_cosmo_cs.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Azure.Documents.Client;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -13,9 +14,14 @@ namespace core_cosmo_cs
 {
     public class Startup
     {
+        private const string EndpointUri = "https://core-cosmo-cs-sql.documents.azure.com:443/";
+        private const string PrimaryKey = "MktS98Vx9ge5G1s6nf7Sc3Ipkuifb88aKG18CNUvhmmy4AOWDhm8ocWmCkt6DXI8NnX3zvmG39ojzi6AfT6CVw==";
+        private DocumentClient client;
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+            client = new DocumentClient(new Uri(EndpointUri), PrimaryKey);
+
         }
 
         public IConfiguration Configuration { get; }
@@ -24,10 +30,10 @@ namespace core_cosmo_cs
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
+            services.AddSingleton(client);
 
-            services.AddDbContext<MyDbContext>(options =>
-                
-                options.UseSqlite("Data Source=Results.db"));
+            // services.AddDbContext<MyDbContext>(options =>
+            //     options.UseSqlite("Data Source=Results.db"));
                 // options.UseSqlServer(Configuration.GetConnectionString("MyDbContext")));
         }
 

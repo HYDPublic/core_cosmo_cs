@@ -14,6 +14,7 @@ namespace core_cosmo_cs.Models
         [JsonProperty(PropertyName = "jsonResult")]
         public string jsonResult { get; set; }
 
+        [Required]
         [JsonProperty(PropertyName = "filePath")]
         public string filePath { get; set; }
 
