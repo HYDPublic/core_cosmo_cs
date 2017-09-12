@@ -11,6 +11,7 @@ using core_cosmo_cs.Data;
 using Microsoft.Azure.Documents.Client;
 using Microsoft.Azure.Documents;
 using System.Net;
+using System.Linq;
 
 namespace core_cosmo_cs.Controllers
 {
@@ -26,6 +27,7 @@ namespace core_cosmo_cs.Controllers
         {
             // var lastRequest = _context.Results.Find(1);
             // ViewData["results"] = lastRequest.jsonResult;
+            var x = ExecuteSimpleQuery("Results", "ResultsCollection");
             return View();
         }
 
@@ -38,9 +40,7 @@ namespace core_cosmo_cs.Controllers
 
             if (results != null) {
                 // is async... need to remedy
-                // await CreateResultsDocumentIfNotExists("Results", "ResultsCollection", results);
-                // _context.Add(results);
-                // _context.SaveChanges();
+                CreateResultsDocumentIfNotExists("Results", "ResultsCollection", results);
                 return View("Results", results);
             } else {
                 ViewData["error"] = "Error in request";
@@ -67,6 +67,27 @@ namespace core_cosmo_cs.Controllers
                     throw;
                 }
             }
+        }
+
+        private IQueryable<ResultViewModel> ExecuteSimpleQuery(string databaseName, string collectionName)
+        {
+            // Set some common query options
+            FeedOptions queryOptions = new FeedOptions { MaxItemCount = -1 };
+
+            // Here we find the Andersen family via its LastName
+            IQueryable<ResultViewModel> resultsQuery = _client.CreateDocumentQuery<ResultViewModel>(
+                    UriFactory.CreateDocumentCollectionUri(databaseName, collectionName), queryOptions)
+                    .Where(r => r.Id == 0); //string?
+
+            // The query is executed synchronously here, but can also be executed asynchronously via the IDocumentQuery<T> interface
+            Console.WriteLine("Running LINQ query...");
+            foreach (ResultViewModel result in resultsQuery)
+            {
+                Console.WriteLine("\tRead {0}", result);
+            }
+            return resultsQuery;
+            // Console.WriteLine("Press any key to continue ...");
+            // Console.ReadKey();
         }
 
         private ResultViewModel ProcessResults(Task<string> json, FormViewModel model) {
