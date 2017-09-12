@@ -19,7 +19,7 @@ namespace core_cosmo_cs.Controllers
         }
         public IActionResult Index()
         {
-            var lastRequest = _context.Results.Find(0);
+            var lastRequest = _context.Results.Find(1);
             ViewData["results"] = lastRequest.jsonResult;
             return View();
         }
@@ -31,9 +31,14 @@ namespace core_cosmo_cs.Controllers
 
             ResultViewModel results = ProcessResults(json, model);
 
-            _context.Add(results);
-            _context.SaveChanges();
-            return View("Results", results);
+            if (results != null) {
+                _context.Add(results);
+                _context.SaveChanges();
+                return View("Results", results);
+            } else {
+                ViewData["error"] = "Error in request";
+                return View("Index");
+            }
         }
 
         private ResultViewModel ProcessResults(Task<string> json, FormViewModel model) {
@@ -43,18 +48,21 @@ namespace core_cosmo_cs.Controllers
             results.filePath = model.filePath;
             results.results = new List<Result>();
 
-            var obj = JArray.Parse(results.jsonResult);
+            if(results.jsonResult.Contains("error")) {
+                return null;
+            } else {
+                var obj = JArray.Parse(results.jsonResult);
 
-            var props = obj.First.Last.First;
+                var props = obj.First.Last.First;
 
-            foreach (var property in props)
-            {
-                Result result = new Result();
-                result.Score = property.ToString();
-                results.results.Add(result);
+                foreach (var property in props)
+                {
+                    Result result = new Result();
+                    result.Score = property.ToString();
+                    results.results.Add(result);
+                }
+                return results;
             }
-
-            return results;
         }
         private static async Task<string> MakeRequest(string filePath) {
             var client = new HttpClient();

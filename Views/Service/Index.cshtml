@@ -19,16 +19,24 @@
 
 <hr>
 
+@{
+    if(ViewData["error"] != null)
+    {
+        <h2 style="color:red">
+            @ViewData["error"]
+        </h2>
+    }
+}
+
 <h2>Recent Requests</h2>
-<p style="color:red">
+<p style="color:blue">
 
 @{
     if(ViewData["results"] != null)
     {
         @ViewData["results"]
-
     } else {
-        <p>nothing</p>
+        <p>Nothing to see here...</p>
     }
 }   
 </p>
