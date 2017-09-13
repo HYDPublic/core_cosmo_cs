@@ -39,8 +39,7 @@ namespace core_cosmo_cs.Controllers
             ResultViewModel results = ProcessResults(json, model);
 
             if (results != null) {
-                // is async... need to remedy
-                CreateResultsDocumentIfNotExists("Results", "ResultsCollection", results);
+                CreateDocument(results);
                 return View("Results", results);
             } else {
                 ViewData["error"] = "Error in request";
@@ -48,19 +47,23 @@ namespace core_cosmo_cs.Controllers
             }
         }
 
+        private async void CreateDocument(ResultViewModel results) {
+            await CreateResultsDocumentIfNotExists("Results", "ResultsCollection", results);
+        }
+
         private async Task CreateResultsDocumentIfNotExists(string databaseName, string collectionName, ResultViewModel results)
         {
             try
             {
                 await _client.ReadDocumentAsync(UriFactory.CreateDocumentUri(databaseName, collectionName, results.Id.ToString()));
-                Console.WriteLine("Found {0}", results.Id);
+                Console.WriteLine("Found Result {0}", results.Id);
             }
             catch (DocumentClientException de)
             {
                 if (de.StatusCode == HttpStatusCode.NotFound)
                 {
                     await _client.CreateDocumentAsync(UriFactory.CreateDocumentCollectionUri(databaseName, collectionName), results);
-                    Console.WriteLine("Created Family {0}", results.Id);
+                    Console.WriteLine("Created Result {0}", results.Id);
                 }
                 else
                 {
@@ -69,30 +72,37 @@ namespace core_cosmo_cs.Controllers
             }
         }
 
+        private int DocumentCount(string databaseName, string collectionName) {
+            var queryOptions = new FeedOptions { MaxItemCount = -1 };     
+
+            var resultsQuery = _client.CreateDocumentQuery<ResultViewModel>(
+                    UriFactory.CreateDocumentCollectionUri(databaseName, collectionName), queryOptions)
+                    .Where(r => r.Id != "-1");
+
+            return resultsQuery.Count();
+        }
+
         private IQueryable<ResultViewModel> ExecuteSimpleQuery(string databaseName, string collectionName)
         {
-            // Set some common query options
             FeedOptions queryOptions = new FeedOptions { MaxItemCount = -1 };
 
-            // Here we find the Andersen family via its LastName
             IQueryable<ResultViewModel> resultsQuery = _client.CreateDocumentQuery<ResultViewModel>(
                     UriFactory.CreateDocumentCollectionUri(databaseName, collectionName), queryOptions)
-                    .Where(r => r.Id == 0); //string?
-
-            // The query is executed synchronously here, but can also be executed asynchronously via the IDocumentQuery<T> interface
-            Console.WriteLine("Running LINQ query...");
+                    .Where(r => r.Id == "0"); //string?
+            
             foreach (ResultViewModel result in resultsQuery)
             {
                 Console.WriteLine("\tRead {0}", result);
             }
             return resultsQuery;
-            // Console.WriteLine("Press any key to continue ...");
-            // Console.ReadKey();
         }
 
         private ResultViewModel ProcessResults(Task<string> json, FormViewModel model) {
             ResultViewModel results = new ResultViewModel();
 
+            var length = DocumentCount("Results", "ResultsCollection");
+
+            results.Id = length.ToString();
             results.jsonResult = json.Result;
             results.filePath = model.filePath;
             results.results = new List<Result>();

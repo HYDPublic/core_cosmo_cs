@@ -8,7 +8,7 @@ namespace core_cosmo_cs.Models
     public class ResultViewModel
     {
         [JsonProperty(PropertyName = "id")]
-        public int Id { get; set; }
+        public string Id { get; set; }
 
         [Required]
         [JsonProperty(PropertyName = "jsonResult")]
