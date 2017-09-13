@@ -15,8 +15,9 @@ namespace core_cosmo_cs
 {
     public class Startup
     {
+        // Replace with your credentials, found in the Azure portal
         private const string EndpointUri = "https://core-cosmo-cs-sql.documents.azure.com:443/";
-        private const string PrimaryKey = "MktS98Vx9ge5G1s6nf7Sc3Ipkuifb88aKG18CNUvhmmy4AOWDhm8ocWmCkt6DXI8NnX3zvmG39ojzi6AfT6CVw==";
+        private const string PrimaryKey = "<your cosmosdb primary key>";
         private DocumentClient client;
         public Startup(IConfiguration configuration)
         {
@@ -33,11 +34,7 @@ namespace core_cosmo_cs
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
-            services.AddSingleton(client);
-
-            // services.AddDbContext<MyDbContext>(options =>
-            //     options.UseSqlite("Data Source=Results.db"));
-                // options.UseSqlServer(Configuration.GetConnectionString("MyDbContext")));
+            services.AddSingleton(client); // Add client to Dependency Injection Container
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

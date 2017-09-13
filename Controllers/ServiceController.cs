@@ -18,9 +18,12 @@ namespace core_cosmo_cs.Controllers
 {
     public class ServiceController : Controller
     {   
+        // Replace with your subscription key for the Emotion API
+        const string CognitiveServicesKey = "<your subscription key>";
         DocumentClient _client;
         FeedOptions queryOptions = new FeedOptions { MaxItemCount = -1 };     
         
+        // Recieving from the DI Container
         public ServiceController(DocumentClient client) {
             _client = client;
         }
@@ -28,6 +31,7 @@ namespace core_cosmo_cs.Controllers
         {
             var resultsQuery = SelectLastResult("Results", "ResultsCollection");
             
+            // Loop will execute exactly once if older results exist
             ResultViewModel lastResult = null;
             foreach(var result in resultsQuery) {
                 lastResult = result;
@@ -41,12 +45,15 @@ namespace core_cosmo_cs.Controllers
         [HttpPost, ActionName("Submit")]
         public IActionResult Submit(FormViewModel model) 
         {
+            // Make the request to Cognitive Services API
             var json = MakeRequest(model.filePath);
 
+            // Process results into our view model
             ResultViewModel results = ProcessResults(json, model);
 
+            // If request returned okay, log it in CosmosDB collection as a new document.
             if (results != null) {
-                CreateDocument(results);
+                CreateResultsDocument(results);
                 return View("Results", results);
             } else {
                 ViewData["error"] = "Error in request";
@@ -54,7 +61,7 @@ namespace core_cosmo_cs.Controllers
             }
         }
 
-        private async void CreateDocument(ResultViewModel results) {
+        private async void CreateResultsDocument(ResultViewModel results) {
             await CreateResultsDocumentIfNotExists("Results", "ResultsCollection", results);
         }
 
@@ -131,7 +138,7 @@ namespace core_cosmo_cs.Controllers
         private static async Task<string> MakeRequest(string filePath) {
             var client = new HttpClient();
 
-            client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", "560d169268e3471685c09dbadf41422e");
+            client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", CognitiveServicesKey);
 
             string uri = "https://westus.api.cognitive.microsoft.com/emotion/v1.0/recognize?";
 

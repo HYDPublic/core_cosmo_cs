@@ -11,9 +11,6 @@ using Newtonsoft.Json;
 using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
 
-// Following these instructions for Cosmos DB
-// https://docs.microsoft.com/en-us/azure/cosmos-db/documentdb-dotnetcore-get-started
-
 namespace core_cosmo_cs
 {
     public class Program
