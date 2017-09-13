@@ -13,21 +13,28 @@ using Microsoft.Azure.Documents;
 using System.Net;
 using System.Linq;
 
+// TODO: Break apart into multiple files for cleanliness.
 namespace core_cosmo_cs.Controllers
 {
     public class ServiceController : Controller
     {   
         DocumentClient _client;
-        // MyDbContext _context;
+        FeedOptions queryOptions = new FeedOptions { MaxItemCount = -1 };     
+        
         public ServiceController(DocumentClient client) {
-            // _context = context;
             _client = client;
         }
         public IActionResult Index()
         {
-            // var lastRequest = _context.Results.Find(1);
-            // ViewData["results"] = lastRequest.jsonResult;
-            var x = ExecuteSimpleQuery("Results", "ResultsCollection");
+            var resultsQuery = SelectLastResult("Results", "ResultsCollection");
+            
+            ResultViewModel lastResult = null;
+            foreach(var result in resultsQuery) {
+                lastResult = result;
+            }
+            
+            ViewData["last-result-file"] = lastResult.filePath;
+            ViewData["last-result-json"] = lastResult.jsonResult;
             return View();
         }
 
@@ -82,17 +89,15 @@ namespace core_cosmo_cs.Controllers
             return resultsQuery.Count();
         }
 
-        private IQueryable<ResultViewModel> ExecuteSimpleQuery(string databaseName, string collectionName)
+        private IQueryable<ResultViewModel> SelectLastResult(string databaseName, string collectionName)
         {
-            FeedOptions queryOptions = new FeedOptions { MaxItemCount = -1 };
-
             IQueryable<ResultViewModel> resultsQuery = _client.CreateDocumentQuery<ResultViewModel>(
                     UriFactory.CreateDocumentCollectionUri(databaseName, collectionName), queryOptions)
-                    .Where(r => r.Id == "0"); //string?
+                    .Where(r => r.Id == (DocumentCount(databaseName, collectionName)-1).ToString());
             
             foreach (ResultViewModel result in resultsQuery)
             {
-                Console.WriteLine("\tRead {0}", result);
+                Console.WriteLine("\tRead {0}", result.Id);
             }
             return resultsQuery;
         }

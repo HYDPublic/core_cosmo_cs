@@ -2,12 +2,10 @@
     ViewData["Title"] = "Other Service Page";
 }
 
+@model FormViewModel
 
 <h2>Upload to Azure</h2>
-
 <hr>
-
-@model FormViewModel
 <form asp-controller="Service" asp-action="Submit" method="POST">
     <div class="form-group">
         <label>Upload your file</label>
@@ -16,9 +14,7 @@
         <button type="submit">Submit</button>
     </div>
 </form>
-
 <hr>
-
 @{
     if(ViewData["error"] != null)
     {
@@ -27,17 +23,17 @@
         </h3>
     }
 }
-
 <h2>Recent Requests</h2>
-<p style="color:blue">
+<div>
 @{
-    if(ViewData["results"] != null)
+    if(ViewData["last-result-json"] != null)
     {
-        @ViewData["results"]
+        <h4>FilePath</h4>
+        @ViewData["last-result-file"]
+        <h4>JSON</h4>
+        @ViewData["last-result-json"]        
     } else {
         <p>Nothing to see here...</p>
     }
 }   
-</p>
-
-
+</div>
