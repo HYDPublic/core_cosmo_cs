@@ -1,4 +1,4 @@
-﻿#core-cosmo-cs
+﻿# core-cosmo-cs
 
 .NET Core 2.0 application that makes a request to the Microsoft Cognitive Services Emotion API and logs request results into a CosmosDB instance.
 

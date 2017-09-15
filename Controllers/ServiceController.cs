@@ -7,7 +7,6 @@ using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
-using core_cosmo_cs.Data;
 using Microsoft.Azure.Documents.Client;
 using Microsoft.Azure.Documents;
 using System.Net;
